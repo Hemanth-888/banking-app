@@ -115,20 +115,52 @@ const handleHover = function (e) {
 //passing argument into handler
 nav.addEventListener("mouseover", handleHover.bind(0.5));
 nav.addEventListener("mouseout", handleHover.bind(1));
-//////////////////////////////////////////////
-
-// Sticky Navigation
-const intialcords = section1.getBoundingClientRect();
-
-console.log(intialcords);
-window.addEventListener("scroll", function () {
-  console.log(window.scrollY);
-
-  if (this.window.scrollY > intialcords.top) nav.classList.add("sticky");
-  else nav.classList.remove("sticky");
-});
 
 /////////////////////////////////////////////
+
+// Sticky Navigation
+
+const navHeight = nav.getBoundingClientRect().height;
+// console.log(navHeight);
+const stickyNav = function (entries) {
+  const [entry] = entries;
+  // console.log(entry);
+  if (!entry.isIntersecting) nav.classList.add("sticky");
+  else nav.classList.remove("sticky");
+};
+const headerObserver = new IntersectionObserver(stickyNav, {
+  root: null,
+  threshold: 0,
+  rootMargin: `-${navHeight}px`,
+});
+headerObserver.observe(header);
+
+/////////////////////////////////////////////
+//Revealing Elements on Scroll
+const allSections = document.querySelectorAll(".section");
+const revealSection = function (entries, observer) {
+  const [entry] = entries;
+  // console.log(entry);
+  if (!entry.isIntersecting) return;
+  entry.target.classList.remove("section--hidden");
+
+  observer.unobserve(entry.target);
+};
+const sectionObserver = new IntersectionObserver(revealSection, {
+  root: null,
+  threshold: 0.15,
+});
+
+allSections.forEach(function (section) {
+  sectionObserver.observe(section);
+  section.classList.add("section--hidden");
+});
+/////////////////////////////////////////////
+
+/////////////////////////////////////////////
+
+/////////////////////////////////////////////
+
 //implementing smooth scroll on all nav links
 // document.querySelectorAll('.nav__link').forEach(function (el) {
 //   el.addEventListener('click', function (e) {
@@ -140,6 +172,18 @@ window.addEventListener("scroll", function () {
 //     console.log(id);
 //     document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
 //   });
+// });
+
+////////////////////////////////////////////////////////
+// Sticky Navigation method 2
+// const intialcords = section1.getBoundingClientRect();
+
+// // console.log(intialcords);
+// window.addEventListener("scroll", function () {
+//   // console.log(window.scrollY);
+
+//   if (this.window.scrollY > intialcords.top) nav.classList.add("sticky");
+//   else nav.classList.remove("sticky");
 // });
 
 ////////////////////////////////////////////////////////
@@ -170,6 +214,19 @@ window.addEventListener("scroll", function () {
 
 ////////////////////////////////////////////////////////
 
+//Implement Scrolling
+// const obsCallback = function (entries, observer) {
+//   entries.forEach((entry) => {
+//     console.log(entry);
+//   });
+// };
+// const obsOptions = {
+//   //whenever our target is intersecting the viewport at 10% call f(x)
+//   root: null,
+//   threshold: [0, 0.2],
+// };
+// const observer = new IntersectionObserver(obsCallback, obsOptions);
+// observer.observe(section1);
 // // CREATING, INSERTING, DELETING ELEMENTS
 // const message = document.createElement('div');
 // message.classList.add('cookie-message');
